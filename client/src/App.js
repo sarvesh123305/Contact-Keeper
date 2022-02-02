@@ -8,24 +8,35 @@ import About from "./components/pages/About";
 import ContactState from "./context/contact/ContactState";
 import AuthState from "./context/auth/AuthState";
 import Register from "./components/auth/Register";
-import "./App.css";
+import Login from "./components/auth/Login";
+import AlertState from "./context/alert/AlertState";
+import Alerts from "./components/layout/Alerts";
+import setAuthToken from "./utils/setAuthToken";
 
+import "./App.css";
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 const App = () => {
   return (
     <AuthState>
       <ContactState>
-        <Router>
-          <Fragment>
-            <Navbar />
-            <div className='container'>
-              <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/about' element={<About />} />
-                <Route path='/register' element={<Register />} />
-              </Routes>
-            </div>
-          </Fragment>
-        </Router>
+        <AlertState>
+          <Router>
+            <Fragment>
+              <Navbar />
+              <div className='container'>
+                <Alerts />
+                <Routes>
+                  <Route path='/' element={<Home />} />
+                  <Route path='/about' element={<About />} />
+                  <Route path='/register' element={<Register />} />
+                  <Route path='/login' element={<Login />} />
+                </Routes>
+              </div>
+            </Fragment>
+          </Router>
+        </AlertState>
       </ContactState>
     </AuthState>
   );
