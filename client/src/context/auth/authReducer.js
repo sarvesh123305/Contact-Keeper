@@ -26,17 +26,18 @@ const AlertReducer = (state, action) => {
         isAuthenticated: true,
         loading: false,
       };
+    case LOGIN_SUCCESS:
+      localStorage.setItem("token", action.payload.token);
+      return {
+        ...state,
+        ...action.payload,
+        isAuthenticated: true,
+        loading: false,
+      };
     case REGISTER_FAIL:
-      localStorage.removeItem("token");
-      return {
-        ...state,
-        token: null,
-        isAuthenticated: false,
-        loading: false,
-        user: null,
-        error: action.payload,
-      };
     case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case LOGOUT:
       localStorage.removeItem("token");
       return {
         ...state,
@@ -46,9 +47,6 @@ const AlertReducer = (state, action) => {
         user: null,
         error: action.payload,
       };
-    // case LOGIN_FAIL:
-    // case LOGIN_SUCCESS:
-    // case LOGOUT:
     case CLEAR_ERRORS:
       return {
         ...state,

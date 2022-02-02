@@ -1,5 +1,4 @@
-import React, { useReducer } from "react";
-import { v4 as uuid } from "uuid";
+import React, { useReducer, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "./authContext";
 import authReducer from "./authReducer";
@@ -22,6 +21,10 @@ const AuthState = (props) => {
     user: null,
     error: null,
   };
+  useEffect(() => {
+    loadUser();
+    // eslint-disable-next-line
+  }, []);
 
   const [state, dispatch] = useReducer(authReducer, inititalState);
 
@@ -60,10 +63,32 @@ const AuthState = (props) => {
   };
 
   //Login User
-  const login = () => console.log("Login");
+  const login = async (formData) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const res = await axios.post("/api/auth", formData, config);
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data,
+      });
+      loadUser();
+    } catch (err) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: err.response.data.msg,
+      });
+    }
+  };
 
   //Logout
-  const logout = () => console.log("Logout");
+  const logout = () =>
+    dispatch({
+      type: LOGOUT,
+    });
 
   //Clear Errors
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
